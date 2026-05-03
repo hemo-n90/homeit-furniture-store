@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Majalis Al-Raqi - متجر المجالس الراقي"
+version = "1.0.0"
+id = "artifacts/majalis-alraqi"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21643
+
+[services.development]
+run = "pnpm --filter @workspace/majalis-alraqi run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/majalis-alraqi", "run", "build" ]
+publicDir = "artifacts/majalis-alraqi/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21643"
+BASE_PATH = "/"

@@ -1,0 +1,38 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "vZ5UeS0xkBhQWr31rm3zf"
+uri = "file://artifacts/majalis-alraqi/public/images/hero.png"
+type = "image"
+title = "Luxury Majlis hero image"
+
+[[generated]]
+id = "Z67YwaW55OdR-4cO4ZQAP"
+uri = "file://artifacts/majalis-alraqi/public/images/category-sofa.png"
+type = "image"
+title = "Luxury sofa category"
+
+[[generated]]
+id = "94myLcqdIyUkU9Faj9S6S"
+uri = "file://artifacts/majalis-alraqi/public/images/category-majlis.png"
+type = "image"
+title = "Traditional Majlis category"
+
+[[generated]]
+id = "MsFwrXHzlA2uLyTp1BMpy"
+uri = "file://artifacts/majalis-alraqi/public/images/category-curtains.png"
+type = "image"
+title = "Luxury curtains category"
+
+[[generated]]
+id = "LSAqsvkMmKDfCCXEfjSpM"
+uri = "file://artifacts/majalis-alraqi/public/images/category-decor.png"
+type = "image"
+title = "Home decor category"
+
+[[generated]]
+id = "1hPEYuS0FjxMfOpQR6oV6"
+uri = "file://artifacts/majalis-alraqi/public/images/about-craftsman.png"
+type = "image"
+title = "Craftsman working on furniture"

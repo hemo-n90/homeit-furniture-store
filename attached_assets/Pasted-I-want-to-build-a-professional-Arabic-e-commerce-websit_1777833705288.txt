@@ -1,0 +1,202 @@
+I want to build a professional Arabic e-commerce website for a furniture store named "Majalis Al-Raqi".
+
+The store specializes in sofas, majlis seating, curtains, tables, home decor, and accessories.
+
+The website content and UI should be fully in Arabic, with excellent RTL support.
+
+Use the most suitable technologies for a complete full-stack project. Preferred stack:
+- Frontend: React + TypeScript + Tailwind CSS
+- Animations: Framer Motion
+- Backend: Node.js + Express
+- Database: PostgreSQL, or SQLite if easier on Replit
+- Authentication: JWT or Session Auth
+- Payments: Prepare a payment system that can later be integrated with Stripe or a local payment gateway
+- Full Admin Dashboard
+
+Project requirements:
+
+1. Home Page
+- Luxury and elegant design suitable for a high-end furniture and majlis store.
+- Large Hero Section with a premium image and store information.
+- Buttons such as: "Shop Now" and "Contact Us".
+- Display featured products.
+- Display categories:
+  - Sofas
+  - Majlis
+  - Curtains
+  - Decor
+  - Tables
+  - Offers
+- Products should animate while scrolling.
+- Add smooth hover effects on product cards and buttons.
+- Add sections such as:
+  - Why Choose Majalis Al-Raqi?
+  - Latest Products
+  - Best Sellers
+  - Special Offers
+  - Quick WhatsApp Contact
+
+2. Products Page
+- Display all products.
+- Filter products by category.
+- Search by product name.
+- Sort by price or newest.
+- Each product should include:
+  - Name
+  - Price
+  - Discount price if available
+  - Images
+  - Description
+  - Category
+  - Availability status
+  - Add to Cart button
+  - View Details button
+
+3. Product Details Page
+- Product images.
+- Detailed description.
+- Price.
+- Quantity selector.
+- Add to Cart button.
+- Related products.
+- Elegant Arabic RTL design.
+
+4. Cart Page
+- Display added products.
+- Update quantity.
+- Remove product.
+- Calculate total price.
+- Checkout button.
+
+5. Checkout Page
+- Customer information:
+  - Full name
+  - Phone number
+  - City
+  - Address
+  - Order notes
+- Payment methods:
+  - Cash on delivery
+  - Bank card / online payment, with code prepared for future integration
+- Create a new order and save it in the database.
+- Order success page after submission.
+
+6. Admin Dashboard
+There must be a protected admin login system.
+
+The admin can:
+- Log in and log out.
+- View general statistics:
+  - Number of products
+  - Number of orders
+  - Total sales
+  - Latest orders
+- Add a new product.
+- Edit a product.
+- Delete a product.
+- Upload or enter image URLs for products.
+- Choose whether a product appears on the home page.
+- Choose whether a product is featured.
+- Set product availability:
+  - Available
+  - Out of stock
+- Add discounts to products.
+- Manage categories.
+- View all orders.
+- Change order status:
+  - New
+  - Processing
+  - Shipped
+  - Completed
+  - Cancelled
+- View full order details.
+- Manage home page content such as:
+  - Hero title
+  - Hero description
+  - Hero image
+  - Products shown on the home page
+  - Special offers
+
+7. About Page
+- Create an About page titled "About Majalis Al-Raqi".
+- The content should describe the store as a luxury furniture and majlis brand.
+- Focus on quality, elegance, custom-made designs, premium materials, and customer service.
+- Add beautiful sections and images.
+
+8. Contact Page
+- Contact form.
+- WhatsApp number.
+- Phone number.
+- City.
+- Social media links.
+- Direct WhatsApp contact button.
+
+9. Design and Branding
+- The design should be luxurious, clean, elegant, and smooth.
+- Suggested colors:
+  - Gold
+  - Beige
+  - Dark brown
+  - White
+  - Soft black
+- Use beautiful Arabic fonts such as Cairo or Tajawal.
+- The website must be fully responsive and work perfectly on mobile, tablet, and desktop.
+- Add many smooth animations, but keep them elegant and not distracting.
+- On scroll, sections and products should appear with fade-up and slide animations.
+- Buttons should have smooth hover effects.
+- Professional sticky navbar.
+- Complete footer.
+
+10. Extra Features
+- Floating WhatsApp button on all pages.
+- Top announcement/offers bar.
+- Wishlist system.
+- Product badges such as:
+  - New
+  - Discount
+  - Best Seller
+- Return and exchange policy page.
+- FAQ page.
+- Light mode only with a luxury visual style.
+- Clean and scalable code structure.
+- Add seed/demo products at the beginning.
+- Create a default admin account:
+  - email: admin@majalis-alraqi.com
+  - password: admin123456
+Add a clear code comment that this password must be changed in production.
+
+11. Technical Requirements
+- Create a complete project structure.
+- Create the required database tables:
+  - users
+  - products
+  - categories
+  - orders
+  - order_items
+  - homepage_settings
+  - contact_messages
+- Create REST API endpoints for:
+  - Products
+  - Orders
+  - Categories
+  - Authentication
+  - Home page settings
+  - Contact messages
+- Use input validation.
+- Protect all admin routes.
+- Add clear error messages.
+- Make the user experience very smooth.
+
+12. Important Notes
+- Do not build only a frontend. I need a complete full-stack website with frontend, backend, and database.
+- Pay strong attention to Arabic RTL design.
+- Use reusable components.
+- Make the project directly runnable on Replit.
+- Add a README file explaining:
+  - How to run the project
+  - Default admin credentials
+  - How to manage products
+  - How to connect payment later
+  - How to deploy the project
+
+Start by building the complete project with a luxurious and professional design.
