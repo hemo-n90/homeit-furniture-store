@@ -4,6 +4,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/contexts/CartContext";
 import NotFound from "@/pages/not-found";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
+
+// Wire admin JWT token into every API call automatically
+setAuthTokenGetter(() => localStorage.getItem("admin_token"));
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -45,6 +49,7 @@ function Router() {
     <Switch>
       {/* Admin routes — no navbar/footer */}
       <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/products" component={AdminProducts} />
       <Route path="/admin/orders" component={AdminOrders} />
       <Route path="/admin/categories" component={AdminCategories} />

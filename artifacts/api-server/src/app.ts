@@ -2,10 +2,21 @@ import express, { type Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
+import path from "path";
+import fs from "fs";
 import router from "./routes";
 import { logger } from "./lib/logger";
 
+// Ensure uploads directory exists
+const uploadsDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 const app: Express = express();
+
+// Serve uploaded files as static
+app.use("/api/uploads", express.static(uploadsDir, { maxAge: "7d" }));
 
 app.use(
   pinoHttp({

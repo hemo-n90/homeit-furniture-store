@@ -15,94 +15,104 @@ export function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
   const addToWishlist = useAddToWishlist();
 
+  const price = parseFloat(String(product.price));
+  const discountPrice = product.discountPrice ? parseFloat(String(product.discountPrice)) : null;
+  const images = (product.images as string[]) || [];
+  const mainImage = images[0] || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80";
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     addItem(product, 1);
-    toast({
-      title: "تم الإضافة بنجاح",
-      description: `تم إضافة ${product.nameAr} إلى سلة التسوق.`,
-    });
+    toast({ title: "تم الإضافة للسلة", description: product.nameAr });
   };
 
   const handleAddToWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     addToWishlist.mutate(
       { data: { productId: product.id } },
-      {
-        onSuccess: () => {
-          toast({
-            title: "تم الإضافة بنجاح",
-            description: `تم إضافة ${product.nameAr} إلى قائمة الأمنيات.`,
-          });
-        },
-      }
+      { onSuccess: () => toast({ title: "تم الإضافة للمفضلة", description: product.nameAr }) }
     );
   };
 
   return (
     <Link href={`/products/${product.id}`}>
-      <motion.div 
-        className="group relative bg-card rounded-xl overflow-hidden shadow-sm border hover:shadow-md transition-all duration-300"
-        whileHover={{ y: -5 }}
+      <motion.div
+        className="group relative bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300"
+        whileHover={{ y: -4 }}
       >
         {/* Badges */}
-        <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
-          {product.discountPrice && (
-            <span className="bg-destructive text-destructive-foreground text-xs font-bold px-2 py-1 rounded">
-              خصم
+        <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+          {discountPrice && (
+            <span className="bg-destructive text-destructive-foreground text-[11px] font-black px-2 py-1 rounded-md shadow-sm">
+              {Math.round((1 - discountPrice / price) * 100)}% خصم
             </span>
           )}
           {product.isBestseller && (
-            <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded">
+            <span className="bg-primary text-primary-foreground text-[11px] font-black px-2 py-1 rounded-md shadow-sm">
               الأكثر مبيعاً
             </span>
           )}
-          {product.badge && (
-            <span className="bg-foreground text-background text-xs font-bold px-2 py-1 rounded">
+          {product.badge && !product.isBestseller && (
+            <span className="bg-secondary text-secondary-foreground text-[11px] font-black px-2 py-1 rounded-md shadow-sm">
               {product.badge}
+            </span>
+          )}
+          {!product.inStock && (
+            <span className="bg-muted text-muted-foreground text-[11px] font-bold px-2 py-1 rounded-md">
+              غير متوفر
             </span>
           )}
         </div>
 
+        {/* Wishlist button - always visible on mobile, hover on desktop */}
+        <button
+          onClick={handleAddToWishlist}
+          className="absolute top-3 left-3 z-10 bg-background/80 backdrop-blur-sm text-foreground p-2 rounded-full shadow-sm sm:opacity-0 sm:group-hover:opacity-100 transition-all hover:bg-primary hover:text-primary-foreground"
+          title="أضف للمفضلة"
+        >
+          <Heart size={15} />
+        </button>
+
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-muted">
-          <img 
-            src={product.images[0] || "/images/category-sofa.png"} 
+          <img
+            src={mainImage}
             alt={product.nameAr}
             className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+            onError={e => {
+              (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80";
+            }}
           />
-          
-          {/* Quick Actions */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-center gap-2 translate-y-4 group-hover:translate-y-0">
-            <button 
+
+          {/* Add to cart overlay */}
+          <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+            <button
               onClick={handleAddToCart}
-              className="bg-primary text-primary-foreground p-3 rounded-full hover:bg-primary/90 transition-colors"
-              title="أضف للسلة"
+              disabled={!product.inStock}
+              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <ShoppingBag size={18} />
-            </button>
-            <button 
-              onClick={handleAddToWishlist}
-              className="bg-background text-foreground p-3 rounded-full hover:bg-background/90 transition-colors"
-              title="أضف للمفضلة"
-            >
-              <Heart size={18} />
+              <ShoppingBag size={16} />
+              {product.inStock ? "أضف للسلة" : "غير متوفر"}
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-5 text-center">
-          <h3 className="font-bold text-lg mb-1 truncate text-foreground">{product.nameAr}</h3>
-          <p className="text-sm text-muted-foreground mb-3">{product.categoryNameAr}</p>
-          <div className="flex items-center justify-center gap-3">
-            {product.discountPrice ? (
+        <div className="p-4 text-center" dir="rtl">
+          <h3 className="font-bold text-base mb-1 text-foreground line-clamp-2 leading-tight min-h-[2.5rem]">
+            {product.nameAr}
+          </h3>
+          <p className="text-xs text-muted-foreground mb-3">{product.categoryNameAr}</p>
+          <div className="flex items-center justify-center gap-2 flex-wrap">
+            {discountPrice ? (
               <>
-                <span className="text-lg font-black text-primary">{product.discountPrice} ر.س</span>
-                <span className="text-sm text-muted-foreground line-through">{product.price} ر.س</span>
+                <span className="text-base font-black text-primary">{discountPrice.toLocaleString()} ر.س</span>
+                <span className="text-xs text-muted-foreground line-through">{price.toLocaleString()} ر.س</span>
               </>
             ) : (
-              <span className="text-lg font-black text-primary">{product.price} ر.س</span>
+              <span className="text-base font-black text-primary">{price.toLocaleString()} ر.س</span>
             )}
           </div>
         </div>
