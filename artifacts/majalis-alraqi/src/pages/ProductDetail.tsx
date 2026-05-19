@@ -4,15 +4,16 @@ import { useGetProduct, useListProducts, useAddToWishlist } from "@workspace/api
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { ShoppingBag, Heart, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingBag, Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const productId = parseInt(id || "0");
   const { data: product, isLoading } = useGetProduct(productId, { query: { enabled: !!productId } });
   const { data: relatedData } = useListProducts(
-    { categoryId: product?.categoryId ?? undefined, limit: 4 },
+    { categoryId: product?.categoryId ?? undefined, limit: 5 },
     { query: { enabled: !!product?.categoryId } }
   );
   const { addItem } = useCart();
@@ -20,18 +21,19 @@ export default function ProductDetail() {
   const addToWishlist = useAddToWishlist();
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const { t, dir, lang } = useLanguage();
 
   const handleAddToCart = () => {
     if (!product) return;
     addItem(product as any, quantity);
-    toast({ title: "تم الإضافة للسلة", description: product.nameAr });
+    toast({ title: lang === "ar" ? "تم الإضافة للسلة" : "Added to cart", description: product.nameAr });
   };
 
   const handleAddToWishlist = () => {
     if (!product) return;
     addToWishlist.mutate(
       { data: { productId: product.id } },
-      { onSuccess: () => toast({ title: "تم الإضافة للمفضلة", description: product.nameAr }) }
+      { onSuccess: () => toast({ title: lang === "ar" ? "تم الإضافة للمفضلة" : "Added to wishlist", description: product.nameAr }) }
     );
   };
 
@@ -54,10 +56,10 @@ export default function ProductDetail() {
   }
 
   if (!product) return (
-    <div className="min-h-screen pt-24 flex items-center justify-center">
+    <div className="min-h-screen pt-24 flex items-center justify-center" dir={dir}>
       <div className="text-center">
-        <p className="text-2xl font-bold text-muted-foreground mb-4">المنتج غير موجود</p>
-        <Link href="/products" className="text-primary hover:underline">العودة للمنتجات</Link>
+        <p className="text-2xl font-bold text-muted-foreground mb-4">{t.productDetail.notFound}</p>
+        <Link href="/products" className="text-primary hover:underline">{t.productDetail.back}</Link>
       </div>
     </div>
   );
@@ -66,53 +68,50 @@ export default function ProductDetail() {
   const price = parseFloat(String(product.price));
   const discountPrice = product.discountPrice ? parseFloat(String(product.discountPrice)) : null;
   const relatedProducts = (relatedData?.products || []).filter(p => p.id !== product.id).slice(0, 4);
+  const currency = dir === "rtl" ? "ر.س" : "SAR";
+  const displayName = lang === "en" && product.name ? product.name : product.nameAr;
+  const displayCategory = lang === "en" && (product as any).categoryName ? (product as any).categoryName : product.categoryNameAr;
+  const displayDesc = lang === "en" && (product as any).description ? (product as any).description : product.descriptionAr;
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-background" dir="rtl">
+    <div className="min-h-screen pt-24 pb-16 bg-background" dir={dir}>
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-          <Link href="/" className="hover:text-primary transition-colors">الرئيسية</Link>
-          <ChevronLeft size={14} className="rotate-180" />
-          <Link href="/products" className="hover:text-primary transition-colors">المنتجات</Link>
-          <ChevronLeft size={14} className="rotate-180" />
-          <span className="text-foreground font-medium">{product.nameAr}</span>
+          <Link href="/" className="hover:text-primary transition-colors">{t.nav.home}</Link>
+          <ChevronLeft size={14} className={dir === "rtl" ? "rotate-180" : ""} />
+          <Link href="/products" className="hover:text-primary transition-colors">{t.nav.products}</Link>
+          <ChevronLeft size={14} className={dir === "rtl" ? "rotate-180" : ""} />
+          <span className="text-foreground font-medium line-clamp-1 max-w-[200px]">{displayName}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
           {/* Images */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+          <motion.div initial={{ opacity: 0, x: dir === "rtl" ? -20 : 20 }} animate={{ opacity: 1, x: 0 }}>
             <div className="relative rounded-2xl overflow-hidden aspect-square bg-muted mb-4">
               <img
                 src={images[activeImage] || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80"}
-                alt={product.nameAr}
+                alt={displayName}
                 className="w-full h-full object-cover"
               />
               {images.length > 1 && (
                 <>
-                  <button
-                    onClick={() => setActiveImage(i => Math.max(0, i - 1))}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-full p-2 hover:bg-background transition-colors"
-                  >
+                  <button onClick={() => setActiveImage(i => Math.max(0, i - 1))}
+                    className="absolute start-3 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-full p-2 hover:bg-background transition-colors">
                     <ChevronLeft size={20} />
                   </button>
-                  <button
-                    onClick={() => setActiveImage(i => Math.min(images.length - 1, i + 1))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-full p-2 hover:bg-background transition-colors"
-                  >
+                  <button onClick={() => setActiveImage(i => Math.min(images.length - 1, i + 1))}
+                    className="absolute end-3 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-full p-2 hover:bg-background transition-colors">
                     <ChevronRight size={20} />
                   </button>
                 </>
               )}
             </div>
             {images.length > 1 && (
-              <div className="flex gap-3">
+              <div className="flex gap-3 overflow-x-auto pb-2">
                 {images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveImage(i)}
-                    className={`rounded-xl overflow-hidden w-20 h-20 border-2 transition-all ${activeImage === i ? "border-primary" : "border-transparent"}`}
-                  >
+                  <button key={i} onClick={() => setActiveImage(i)}
+                    className={`shrink-0 rounded-xl overflow-hidden w-20 h-20 border-2 transition-all ${activeImage === i ? "border-primary" : "border-transparent opacity-70 hover:opacity-100"}`}>
                     <img src={img} alt="" className="w-full h-full object-cover" />
                   </button>
                 ))}
@@ -121,89 +120,71 @@ export default function ProductDetail() {
           </motion.div>
 
           {/* Details */}
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-6">
+          <motion.div initial={{ opacity: 0, x: dir === "rtl" ? 20 : -20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-6">
             {/* Badges */}
             <div className="flex gap-2 flex-wrap">
-              {discountPrice && <span className="bg-destructive text-destructive-foreground text-sm font-bold px-3 py-1 rounded-full">خصم</span>}
-              {product.isBestseller && <span className="bg-primary text-primary-foreground text-sm font-bold px-3 py-1 rounded-full">الأكثر مبيعاً</span>}
-              {!product.inStock && <span className="bg-muted text-muted-foreground text-sm font-bold px-3 py-1 rounded-full">غير متوفر</span>}
+              {discountPrice && <span className="bg-destructive text-destructive-foreground text-sm font-bold px-3 py-1 rounded-full">{lang === "ar" ? "خصم" : "Sale"}</span>}
+              {product.isBestseller && <span className="bg-primary text-primary-foreground text-sm font-bold px-3 py-1 rounded-full">{lang === "ar" ? "الأكثر مبيعاً" : "Best Seller"}</span>}
+              {!product.inStock && <span className="bg-muted text-muted-foreground text-sm font-bold px-3 py-1 rounded-full">{t.productDetail.outOfStock}</span>}
             </div>
 
             <div>
-              <p className="text-primary text-sm font-semibold mb-2">{product.categoryNameAr}</p>
-              <h1 className="text-3xl lg:text-4xl font-black text-foreground leading-tight">{product.nameAr}</h1>
+              <p className="text-primary text-sm font-semibold mb-2">{displayCategory}</p>
+              <h1 className="text-3xl lg:text-4xl font-black text-foreground leading-tight">{displayName}</h1>
             </div>
 
             {/* Price */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 flex-wrap">
               {discountPrice ? (
                 <>
-                  <span className="text-4xl font-black text-primary">{discountPrice.toLocaleString()} ر.س</span>
-                  <span className="text-xl text-muted-foreground line-through">{price.toLocaleString()} ر.س</span>
+                  <span className="text-4xl font-black text-primary">{discountPrice.toLocaleString()} {currency}</span>
+                  <span className="text-xl text-muted-foreground line-through">{price.toLocaleString()} {currency}</span>
                   <span className="bg-destructive/10 text-destructive text-sm font-bold px-3 py-1 rounded-full">
-                    وفر {((1 - discountPrice / price) * 100).toFixed(0)}%
+                    {lang === "ar" ? "وفر" : "Save"} {((1 - discountPrice / price) * 100).toFixed(0)}%
                   </span>
                 </>
               ) : (
-                <span className="text-4xl font-black text-primary">{price.toLocaleString()} ر.س</span>
+                <span className="text-4xl font-black text-primary">{price.toLocaleString()} {currency}</span>
               )}
             </div>
 
             {/* Description */}
-            {product.descriptionAr && (
+            {displayDesc && (
               <p className="text-muted-foreground leading-relaxed text-base border-t border-border pt-6">
-                {product.descriptionAr}
+                {displayDesc}
               </p>
             )}
 
             {/* Quantity */}
             <div className="flex items-center gap-4">
-              <span className="font-semibold text-foreground">الكمية:</span>
+              <span className="font-semibold text-foreground">{t.productDetail.quantity}:</span>
               <div className="flex items-center border border-border rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  className="px-4 py-2 bg-muted hover:bg-muted/80 transition-colors font-bold text-lg"
-                >-</button>
+                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="px-4 py-2 bg-muted hover:bg-muted/80 transition-colors font-bold text-lg">-</button>
                 <span className="px-6 py-2 font-bold text-lg">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(q => q + 1)}
-                  className="px-4 py-2 bg-muted hover:bg-muted/80 transition-colors font-bold text-lg"
-                >+</button>
+                <button onClick={() => setQuantity(q => q + 1)} className="px-4 py-2 bg-muted hover:bg-muted/80 transition-colors font-bold text-lg">+</button>
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex gap-4">
-              <button
-                onClick={handleAddToCart}
-                disabled={!product.inStock}
-                className="flex-1 bg-primary text-primary-foreground py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <button onClick={handleAddToCart} disabled={!product.inStock}
+                className="flex-1 bg-primary text-primary-foreground py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                 <ShoppingBag size={22} />
-                {product.inStock ? "أضف للسلة" : "غير متوفر"}
+                {product.inStock ? t.productDetail.addToCart : t.productDetail.outOfStock}
               </button>
-              <button
-                onClick={handleAddToWishlist}
-                className="bg-card border border-border p-4 rounded-xl hover:bg-muted transition-colors"
-              >
+              <button onClick={handleAddToWishlist} className="bg-card border border-border p-4 rounded-xl hover:bg-muted transition-colors" title={t.productDetail.addToWishlist}>
                 <Heart size={22} />
               </button>
             </div>
 
-            {/* Benefits */}
+            {/* Benefits strip */}
             <div className="bg-card border border-border rounded-xl p-4 grid grid-cols-3 gap-4 text-center text-sm">
-              <div>
-                <p className="font-bold text-foreground">توصيل مجاني</p>
-                <p className="text-muted-foreground text-xs">للطلبات فوق 2000 ر.س</p>
-              </div>
-              <div>
-                <p className="font-bold text-foreground">ضمان الجودة</p>
-                <p className="text-muted-foreground text-xs">منتجات مضمونة</p>
-              </div>
-              <div>
-                <p className="font-bold text-foreground">دعم فوري</p>
-                <p className="text-muted-foreground text-xs">عبر واتساب</p>
-              </div>
+              {t.home.benefits.slice(0, 3).map((b, i) => (
+                <div key={i}>
+                  <p className="font-bold text-foreground text-xs sm:text-sm">{b.title}</p>
+                  <p className="text-muted-foreground text-[10px] sm:text-xs">{b.desc}</p>
+                </div>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -212,7 +193,7 @@ export default function ProductDetail() {
         {relatedProducts.length > 0 && (
           <section>
             <div className="text-center mb-10">
-              <h2 className="text-2xl font-black text-foreground mb-3">منتجات ذات صلة</h2>
+              <h2 className="text-2xl font-black text-foreground mb-3">{t.productDetail.relatedProducts}</h2>
               <div className="w-16 h-1 bg-primary mx-auto rounded"></div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

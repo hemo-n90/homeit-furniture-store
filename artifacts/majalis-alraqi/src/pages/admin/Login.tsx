@@ -34,8 +34,11 @@ export default function AdminLogin() {
         className="bg-card rounded-3xl shadow-2xl p-10 w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-black text-foreground mb-2">مجالس الراقي</h1>
-          <p className="text-muted-foreground">لوحة التحكم — تسجيل الدخول</p>
+          <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <span className="text-primary-foreground font-black text-3xl leading-none">H</span>
+          </div>
+          <h1 className="text-2xl font-black text-foreground mb-1">هوميت للأثاث</h1>
+          <p className="text-muted-foreground text-sm">لوحة التحكم — تسجيل الدخول</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -46,9 +49,10 @@ export default function AdminLogin() {
               required
               value={form.email}
               onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-              placeholder="admin@majalis-alraqi.com"
+              placeholder="admin@homeitfurniture.com"
               className="w-full bg-muted/50 border border-border rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary outline-none transition-all"
               dir="ltr"
+              autoComplete="username"
             />
           </div>
           <div>
@@ -60,6 +64,7 @@ export default function AdminLogin() {
               onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
               placeholder="••••••••"
               className="w-full bg-muted/50 border border-border rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary outline-none transition-all"
+              autoComplete="current-password"
             />
           </div>
           <button
@@ -71,7 +76,7 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-muted-foreground mt-6">
+        <p className="text-center text-xs text-muted-foreground mt-6 bg-muted/50 rounded-lg p-3">
           admin@majalis-alraqi.com / admin123456
         </p>
       </motion.div>

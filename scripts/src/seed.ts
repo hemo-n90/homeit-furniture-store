@@ -17,7 +17,7 @@ async function seed() {
   await db
     .insert(usersTable)
     .values({
-      email: "admin@majalis-alraqi.com",
+      email: "admin@homeitfurniture.com",
       password: passwordHash,
       name: "مدير النظام",
       role: "admin",
@@ -218,8 +218,8 @@ async function seed() {
   const existing = await db.select().from(homepageSettingsTable).limit(1);
   if (existing.length === 0) {
     await db.insert(homepageSettingsTable).values({
-      heroTitle: "Majalis Al-Raqi — Luxury Arabic Furniture",
-      heroTitleAr: "مجالس الراقي — أثاث عربي فاخر",
+      heroTitle: "Homeit Furniture — Premium Home Décor",
+      heroTitleAr: "هوميت للأثاث — أثاث منزلي فاخر",
       heroDescription: "Crafting bespoke luxury furniture for discerning homes",
       heroDescriptionAr: "نصنع أثاثاً فاخراً راقياً للمنازل الراقية — حيث يلتقي الأصالة بالحداثة",
       heroImage:

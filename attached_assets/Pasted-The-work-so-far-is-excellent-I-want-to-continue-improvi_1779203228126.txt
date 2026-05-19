@@ -1,0 +1,78 @@
+The work so far is excellent. I want to continue improving the project with these changes:
+
+1. Change the store name
+- Change the Arabic store name from "مجالس الراقي" to:
+  "هوميت للأثاث"
+- Change the English store name to:
+  "Homeit Furniture"
+- Update the name everywhere in the project:
+  - Navbar
+  - Footer
+  - Home page
+  - About page
+  - Contact page
+  - Admin dashboard
+  - Page titles
+  - Metadata
+  - README file
+  - Any default text or seed data
+- Make sure there are no remaining references to the old name.
+
+2. Add Arabic and English language support
+- The website must support both Arabic and English.
+- Add a clear language switcher in the navbar.
+- Arabic mode:
+  - Language: Arabic
+  - Direction: RTL
+  - Store name: هوميت للأثاث
+- English mode:
+  - Language: English
+  - Direction: LTR
+  - Store name: Homeit Furniture
+- All public pages should support both languages:
+  - Home page
+  - Products page
+  - Product details page
+  - Cart page
+  - Checkout page
+  - Order success page
+  - About page
+  - Contact page
+  - FAQ page
+  - Return and exchange policy page
+- Admin dashboard can remain Arabic for now, but make sure it still works correctly after adding language support.
+- Save the selected language in local storage so the user preference remains after refresh.
+- Make sure text alignment, layout direction, buttons, forms, cards, navbar, and footer change correctly based on the selected language.
+
+3. Add logo support
+- Add a clear logo area in the navbar and footer.
+- The logo should appear next to the store name.
+- Add a default placeholder logo until I upload the real store logo.
+- Make the logo easy to replace later.
+- In the admin dashboard, add a setting that allows the admin to upload or change the store logo.
+- The logo upload should support uploading from the device/camera roll.
+- Store the uploaded logo path/URL in the database or site settings.
+- The logo should display correctly on:
+  - Navbar
+  - Footer
+  - Admin dashboard
+  - Home page if needed
+- Make sure the logo is responsive and looks good on mobile and desktop.
+
+4. Update design identity
+- Adjust the branding to fit the new name "Homeit Furniture / هوميت للأثاث".
+- Keep the luxurious furniture style.
+- Keep the colors elegant and suitable for a furniture store:
+  - Gold
+  - Beige
+  - Brown
+  - White
+  - Soft black
+- Make sure the design looks modern, premium, and clean.
+
+5. Final checks
+- After applying these changes, check the whole website again.
+- Make sure all pages still work.
+- Make sure the admin dashboard still works.
+- Make sure product management, orders, hero slider, image upload, and logo upload work correctly.
+- Fix any broken text, layout issue, RTL/LTR issue, route issue, or console error.

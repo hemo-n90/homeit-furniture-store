@@ -19,7 +19,7 @@ router.get("/homepage", async (req, res) => {
 // PATCH /api/homepage
 router.patch("/homepage", requireAdmin, async (req, res) => {
   try {
-    const fields = ["heroTitle", "heroTitleAr", "heroDescription", "heroDescriptionAr", "heroImage", "announcementBar", "announcementBarAr", "whatsappNumber"];
+    const fields = ["heroTitle", "heroTitleAr", "heroDescription", "heroDescriptionAr", "heroImage", "announcementBar", "announcementBarAr", "whatsappNumber", "logoUrl"];
     const updates: Record<string, any> = {};
     for (const f of fields) {
       if (req.body[f] !== undefined) updates[f] = req.body[f];

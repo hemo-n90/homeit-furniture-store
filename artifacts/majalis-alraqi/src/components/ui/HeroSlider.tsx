@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Slide {
   image: string;
@@ -11,36 +12,14 @@ interface Slide {
 
 interface HeroSliderProps {
   slides?: Slide[];
-  titleAr?: string;
-  descriptionAr?: string;
 }
 
-const DEFAULT_SLIDES: Slide[] = [
-  {
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1920&q=90",
-    titleAr: "مجالس الراقي — أثاث عربي فاخر",
-    descriptionAr: "نصنع لك مجالس وأثاثاً يعكس ذوقك الرفيع ويليق بضيوفك",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1920&q=90",
-    titleAr: "تشكيلة الكنبات الفاخرة",
-    descriptionAr: "أناقة لا مثيل لها — مصنوعة بأرقى الأقمشة وأجود الخامات",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1567016520496-0cb37d8467a7?w=1920&q=90",
-    titleAr: "ديكور راقٍ يليق بمنزلك",
-    descriptionAr: "اكتشف تشكيلتنا الحصرية من الأثاث المنزلي الفاخر",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=90",
-    titleAr: "غرف المعيشة الفاخرة",
-    descriptionAr: "حوّل منزلك إلى تحفة فنية بلمسة مجالس الراقي",
-  },
-  {
-    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&q=90",
-    titleAr: "أثاث بمعايير عالمية",
-    descriptionAr: "جودة تدوم وفخامة تبقى — كل قطعة حكاية",
-  },
+const SLIDE_IMAGES = [
+  "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1920&q=90",
+  "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1920&q=90",
+  "https://images.unsplash.com/photo-1567016520496-0cb37d8467a7?w=1920&q=90",
+  "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=90",
+  "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&q=90",
 ];
 
 const slideVariants = {
@@ -49,19 +28,23 @@ const slideVariants = {
   exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -80 : 80 }),
 };
 
-export function HeroSlider({ slides, titleAr, descriptionAr }: HeroSliderProps) {
-  const allSlides = slides && slides.length > 0 ? slides : DEFAULT_SLIDES;
+export function HeroSlider({ slides }: HeroSliderProps) {
+  const { t, dir } = useLanguage();
+  const defaultSlides: Slide[] = t.home.slides.map((s, i) => ({
+    image: SLIDE_IMAGES[i] || SLIDE_IMAGES[0],
+    titleAr: s.titleAr,
+    descriptionAr: s.descriptionAr,
+  }));
+
+  const allSlides = slides && slides.length > 0 ? slides : defaultSlides;
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
 
-  const goTo = useCallback(
-    (index: number, dir?: number) => {
-      setDirection(dir ?? (index > current ? 1 : -1));
-      setCurrent((index + allSlides.length) % allSlides.length);
-    },
-    [current, allSlides.length]
-  );
+  const goTo = useCallback((index: number, slideDir?: number) => {
+    setDirection(slideDir ?? (index > current ? 1 : -1));
+    setCurrent((index + allSlides.length) % allSlides.length);
+  }, [current, allSlides.length]);
 
   const next = useCallback(() => goTo(current + 1, 1), [current, goTo]);
   const prev = useCallback(() => goTo(current - 1, -1), [current, goTo]);
@@ -73,8 +56,6 @@ export function HeroSlider({ slides, titleAr, descriptionAr }: HeroSliderProps) 
   }, [next, isPaused]);
 
   const slide = allSlides[current];
-  const heroTitle = titleAr || slide.titleAr || DEFAULT_SLIDES[0].titleAr;
-  const heroDesc = descriptionAr || slide.descriptionAr || DEFAULT_SLIDES[0].descriptionAr;
 
   return (
     <section
@@ -100,14 +81,13 @@ export function HeroSlider({ slides, titleAr, descriptionAr }: HeroSliderProps) 
             className="w-full h-full object-cover object-center"
             loading="eager"
           />
-          {/* Multi-layer overlay for text clarity */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30" />
         </motion.div>
       </AnimatePresence>
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto w-full" dir="rtl">
+      <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto w-full" dir={dir}>
         <AnimatePresence mode="wait">
           <motion.div
             key={`content-${current}`}
@@ -116,17 +96,15 @@ export function HeroSlider({ slides, titleAr, descriptionAr }: HeroSliderProps) 
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <motion.div
-              className="inline-block bg-primary/20 backdrop-blur-sm border border-primary/40 text-primary-foreground text-sm font-bold px-4 py-1.5 rounded-full mb-6 tracking-wider"
-            >
-              ✦ مجالس الراقي ✦
+            <motion.div className="inline-block bg-primary/20 backdrop-blur-sm border border-primary/40 text-primary-foreground text-sm font-bold px-4 py-1.5 rounded-full mb-6 tracking-wider">
+              {t.home.badge}
             </motion.div>
 
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 leading-tight drop-shadow-2xl">
-              {heroTitle}
+              {slide.titleAr}
             </h1>
             <p className="text-base sm:text-lg md:text-2xl mb-10 text-white/90 font-light leading-relaxed drop-shadow-lg max-w-2xl mx-auto">
-              {heroDesc}
+              {slide.descriptionAr}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -134,47 +112,43 @@ export function HeroSlider({ slides, titleAr, descriptionAr }: HeroSliderProps) 
                 href="/products"
                 className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all hover:scale-105 shadow-xl w-full sm:w-auto text-center"
               >
-                تسوق الآن
+                {t.home.shopNow}
               </Link>
               <Link
                 href="/contact"
                 className="bg-white/10 backdrop-blur-md text-white border border-white/30 px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all hover:scale-105 w-full sm:w-auto text-center"
               >
-                تواصل معنا
+                {t.home.contactUs}
               </Link>
             </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Arrow Navigation */}
+      {/* Arrow Navigation — flipped for RTL */}
       <button
-        onClick={prev}
-        className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 text-white p-3 sm:p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110 group"
-        aria-label="السابق"
+        onClick={dir === "rtl" ? prev : next}
+        className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 text-white p-3 sm:p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110"
+        aria-label="Previous"
       >
-        <ChevronRight size={22} className="group-hover:scale-110 transition-transform" />
+        <ChevronRight size={22} />
       </button>
       <button
-        onClick={next}
-        className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 text-white p-3 sm:p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110 group"
-        aria-label="التالي"
+        onClick={dir === "rtl" ? next : prev}
+        className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 text-white p-3 sm:p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110"
+        aria-label="Next"
       >
-        <ChevronLeft size={22} className="group-hover:scale-110 transition-transform" />
+        <ChevronLeft size={22} />
       </button>
 
-      {/* Dot Indicators */}
+      {/* Dots */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
         {allSlides.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`transition-all duration-300 rounded-full ${
-              i === current
-                ? "bg-primary w-8 h-3"
-                : "bg-white/40 hover:bg-white/70 w-3 h-3"
-            }`}
-            aria-label={`الشريحة ${i + 1}`}
+            className={`transition-all duration-300 rounded-full ${i === current ? "bg-primary w-8 h-3" : "bg-white/40 hover:bg-white/70 w-3 h-3"}`}
+            aria-label={`Slide ${i + 1}`}
           />
         ))}
       </div>
@@ -191,7 +165,7 @@ export function HeroSlider({ slides, titleAr, descriptionAr }: HeroSliderProps) 
       )}
 
       {/* Slide counter */}
-      <div className="absolute top-6 left-6 z-20 bg-black/30 backdrop-blur-sm text-white text-sm font-bold px-3 py-1 rounded-full">
+      <div className={`absolute top-6 ${dir === "rtl" ? "left-6" : "right-6"} z-20 bg-black/30 backdrop-blur-sm text-white text-sm font-bold px-3 py-1 rounded-full`}>
         {current + 1} / {allSlides.length}
       </div>
     </section>

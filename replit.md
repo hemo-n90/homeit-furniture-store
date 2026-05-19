@@ -2,7 +2,7 @@
 
 ## Overview
 
-pnpm workspace monorepo using TypeScript. Full-stack Arabic e-commerce site "Majalis Al-Raqi" (مجالس الراقي) — a luxury furniture store.
+pnpm workspace monorepo using TypeScript. Full-stack Arabic/English bilingual e-commerce site "Homeit Furniture" (هوميت للأثاث) — a luxury furniture store.
 
 ## Stack
 

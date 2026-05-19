@@ -12,6 +12,7 @@ export const homepageSettingsTable = pgTable("homepage_settings", {
   announcementBar: varchar("announcement_bar", { length: 500 }),
   announcementBarAr: varchar("announcement_bar_ar", { length: 500 }),
   whatsappNumber: varchar("whatsapp_number", { length: 50 }),
+  logoUrl: text("logo_url"),
 });
 
 export const insertHomepageSettingsSchema = createInsertSchema(homepageSettingsTable).omit({ id: true });
