@@ -11,10 +11,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const productId = parseInt(id || "0");
-  const { data: product, isLoading } = useGetProduct(productId, { query: { enabled: !!productId } });
+  const { data: product, isLoading } = useGetProduct(productId, { query: { enabled: !!productId, queryKey: [`/api/products/${productId}`] } });
+  const catId = product?.categoryId;
   const { data: relatedData } = useListProducts(
-    { categoryId: product?.categoryId ?? undefined, limit: 5 },
-    { query: { enabled: !!product?.categoryId } }
+    { categoryId: catId, limit: 5 },
+    { query: { enabled: !!catId, queryKey: [`/api/products`, { categoryId: catId, limit: 5 }] } }
   );
   const { addItem } = useCart();
   const { toast } = useToast();

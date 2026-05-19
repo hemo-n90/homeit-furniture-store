@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { translations, type Lang } from "@/i18n/translations";
 
+type TranslationSet = (typeof translations)[Lang];
+
 interface LanguageContextValue {
   lang: Lang;
   dir: "rtl" | "ltr";
-  t: typeof translations.ar;
+  t: TranslationSet;
   toggleLang: () => void;
   setLang: (lang: Lang) => void;
 }

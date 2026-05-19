@@ -1,0 +1,259 @@
+Fix all errors and fully review the entire project.
+
+The project is good, but I need you to do a complete professional review and fix everything that is broken.
+
+Main goal:
+Make the website fully working, stable, responsive, and ready for testing.
+
+Tasks:
+
+1. Full project error check
+- Check the frontend, backend, database, routes, API calls, authentication, admin dashboard, image uploads, logo upload, cart, checkout, and language switcher.
+- Fix all console errors.
+- Fix all server errors.
+- Fix all TypeScript errors.
+- Fix all build errors.
+- Fix all runtime errors.
+- Fix all broken imports.
+- Fix all missing files/components.
+- Fix all incorrect paths.
+- Fix all broken environment variables.
+- Fix all database connection issues.
+
+2. Public website pages
+Make sure all public pages work correctly:
+- Home page
+- Products page
+- Product details page
+- Cart page
+- Checkout page
+- Order success page
+- About page
+- Contact page
+- FAQ page
+- Return and exchange policy page
+
+Fix:
+- Blank pages
+- 404 errors
+- Routing issues
+- Broken buttons
+- Broken links
+- Broken forms
+- Layout problems
+- Missing translations
+- Mobile issues
+- RTL/LTR issues
+
+3. Admin dashboard
+Fully fix and test the admin dashboard.
+
+Make sure the admin can:
+- Log in successfully
+- Log out successfully
+- Access protected admin pages
+- View dashboard statistics
+- Add products
+- Edit products
+- Delete products
+- Upload product images from device/camera roll
+- Upload multiple images per product
+- Preview images before saving
+- Remove or replace images
+- Manage categories
+- Manage orders
+- View order details
+- Change order status
+- Manage homepage settings
+- Manage hero slider images and text
+- Upload/change the store logo
+- View contact messages
+
+Fix all admin pages:
+- Admin login
+- Dashboard overview
+- Products management
+- Add product
+- Edit product
+- Categories management
+- Orders management
+- Order details
+- Homepage settings
+- Hero slider management
+- Logo/settings management
+- Contact messages
+
+4. Arabic and English support
+Make sure the website supports both:
+- Arabic: هوميت للأثاث
+- English: Homeit Furniture
+
+Fix:
+- Language switcher
+- Arabic RTL layout
+- English LTR layout
+- Text alignment
+- Translations on all public pages
+- Navbar language behavior
+- Footer language behavior
+- Product pages language behavior
+- Cart and checkout language behavior
+- Local storage language saving after refresh
+
+5. Branding and logo
+Make sure the store name is updated everywhere:
+- Arabic: هوميت للأثاث
+- English: Homeit Furniture
+
+Remove any old store name references.
+
+Check:
+- Navbar
+- Footer
+- Home page
+- About page
+- Contact page
+- Admin dashboard
+- Metadata
+- README
+- Seed data
+- Page titles
+
+Make sure the logo area works correctly:
+- Navbar logo
+- Footer logo
+- Admin logo upload
+- Default placeholder logo
+- Responsive logo display
+
+6. Hero slider
+Fix and test the hero slider:
+- Multiple luxury furniture images
+- Auto-play
+- Smooth transitions
+- Arrows
+- Indicator dots
+- Responsive layout
+- Readable text overlay
+- Admin can manage hero slider images and text
+
+7. Product system
+Fix and test the product system:
+- Product listing
+- Product search
+- Product filters
+- Product sorting
+- Product details
+- Featured products
+- Best sellers
+- Special offers
+- Product badges
+- Product images
+- Product availability
+- Product discounts
+- Related products
+- Add to cart
+
+8. Cart and checkout
+Fix and test:
+- Add to cart
+- Remove from cart
+- Update quantity
+- Calculate total correctly
+- Checkout form
+- Payment method selection
+- Cash on delivery
+- Online payment placeholder
+- Order creation
+- Order success page
+- Saving orders in database
+- Showing orders in admin dashboard
+
+9. Database and API
+Check and fix all database tables:
+- users
+- products
+- categories
+- orders
+- order_items
+- homepage_settings
+- hero_slides
+- contact_messages
+
+Check and fix all API endpoints:
+- Auth
+- Products
+- Categories
+- Orders
+- Homepage settings
+- Hero slider
+- Contact messages
+- Image uploads
+- Logo upload
+
+Add:
+- Proper validation
+- Clear error messages
+- Protected admin APIs
+- Correct API responses
+- Proper error handling
+
+10. Mobile and responsive design
+Improve the full mobile experience:
+- Navbar
+- Mobile menu
+- Product cards
+- Product details
+- Cart
+- Checkout
+- Admin dashboard
+- Forms
+- Tables
+- Buttons
+- Hero slider
+- Footer
+
+Make sure there is no bad horizontal scrolling and everything looks clean on mobile.
+
+11. Final testing
+Run the project and test the full user flow:
+- Open home page
+- Switch between Arabic and English
+- Browse products
+- Open product details
+- Add product to cart
+- Checkout
+- Submit order
+- Open order success page
+
+Run the project and test the full admin flow:
+- Login with default admin account
+- Add a product
+- Upload product images
+- Edit product
+- Delete product
+- Manage categories
+- Manage hero slider
+- Upload/change logo
+- View orders
+- Change order status
+- View contact messages
+- Log out
+
+Default admin account:
+- email: admin@majalis-alraqi.com
+- password: admin123456
+
+Important:
+- Do not remove existing good features.
+- Do not simplify the project.
+- Do not convert it into frontend-only.
+- Keep it full-stack.
+- Keep the luxury furniture design.
+- Keep Arabic and English support.
+- Fix everything properly.
+
+After finishing:
+- Tell me exactly what was fixed.
+- Tell me if there are any remaining issues.
+- Tell me how to run and test the project.

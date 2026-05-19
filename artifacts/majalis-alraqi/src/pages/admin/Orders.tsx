@@ -24,7 +24,7 @@ export default function AdminOrders() {
   const { data: orders, isLoading } = useListOrders({ limit: 100 });
   const updateStatus = useUpdateOrderStatus();
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const { data: selectedOrder } = useGetOrder(selectedId!, { query: { enabled: !!selectedId } });
+  const { data: selectedOrder } = useGetOrder(selectedId ?? 0, { query: { enabled: !!selectedId, queryKey: [`/api/orders/${selectedId}`] } });
 
   const handleStatusChange = (id: number, status: string) => {
     updateStatus.mutate(
@@ -60,7 +60,7 @@ export default function AdminOrders() {
               <tbody>
                 {isLoading ? (
                   <tr><td colSpan={7} className="px-5 py-10 text-center text-muted-foreground">جاري التحميل...</td></tr>
-                ) : orders?.map(order => {
+                ) : orders?.orders?.map(order => {
                   const st = getStatusStyle(order.status);
                   return (
                     <tr key={order.id} className="border-t border-border hover:bg-muted/30 transition-colors">
@@ -91,7 +91,7 @@ export default function AdminOrders() {
                     </tr>
                   );
                 })}
-                {!orders?.length && !isLoading && (
+                {!orders?.orders?.length && !isLoading && (
                   <tr><td colSpan={7} className="px-5 py-10 text-center text-muted-foreground">لا توجد طلبات</td></tr>
                 )}
               </tbody>

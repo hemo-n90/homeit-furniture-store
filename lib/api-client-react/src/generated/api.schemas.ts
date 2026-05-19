@@ -194,6 +194,7 @@ export interface HomepageSettings {
   announcementBar?: string | null;
   announcementBarAr?: string | null;
   whatsappNumber?: string | null;
+  logoUrl?: string | null;
 }
 
 export interface UpdateHomepageSettingsBody {
@@ -205,13 +206,13 @@ export interface UpdateHomepageSettingsBody {
   announcementBar?: string | null;
   announcementBarAr?: string | null;
   whatsappNumber?: string | null;
+  logoUrl?: string | null;
 }
 
 export interface CreateContactMessageBody {
   name: string;
-  email: string;
+  email?: string | null;
   phone?: string | null;
-  subject: string;
   message: string;
 }
 

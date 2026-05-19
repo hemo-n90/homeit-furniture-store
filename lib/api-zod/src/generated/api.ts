@@ -453,6 +453,7 @@ export const GetHomepageSettingsResponse = zod.object({
   announcementBar: zod.string().nullish(),
   announcementBarAr: zod.string().nullish(),
   whatsappNumber: zod.string().nullish(),
+  logoUrl: zod.string().nullish(),
 });
 
 /**
@@ -467,6 +468,7 @@ export const UpdateHomepageSettingsBody = zod.object({
   announcementBar: zod.string().nullish(),
   announcementBarAr: zod.string().nullish(),
   whatsappNumber: zod.string().nullish(),
+  logoUrl: zod.string().nullish(),
 });
 
 export const UpdateHomepageSettingsResponse = zod.object({
@@ -479,6 +481,7 @@ export const UpdateHomepageSettingsResponse = zod.object({
   announcementBar: zod.string().nullish(),
   announcementBarAr: zod.string().nullish(),
   whatsappNumber: zod.string().nullish(),
+  logoUrl: zod.string().nullish(),
 });
 
 /**
@@ -486,9 +489,8 @@ export const UpdateHomepageSettingsResponse = zod.object({
  */
 export const SendContactMessageBody = zod.object({
   name: zod.string(),
-  email: zod.string(),
+  email: zod.string().nullish(),
   phone: zod.string().nullish(),
-  subject: zod.string(),
   message: zod.string(),
 });
 

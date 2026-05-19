@@ -116,6 +116,7 @@ export default function AdminProducts() {
     e.preventDefault();
     if (!form.nameAr) { toast({ title: "الاسم العربي مطلوب", variant: "destructive" }); return; }
     if (!form.price || isNaN(parseFloat(form.price))) { toast({ title: "السعر مطلوب", variant: "destructive" }); return; }
+    if (!form.categoryId) { toast({ title: "يرجى اختيار الفئة", variant: "destructive" }); return; }
 
     const payload = {
       name: form.name || form.nameAr,
@@ -124,7 +125,7 @@ export default function AdminProducts() {
       descriptionAr: form.descriptionAr || undefined,
       price: parseFloat(form.price),
       discountPrice: form.discountPrice ? parseFloat(form.discountPrice) : undefined,
-      categoryId: form.categoryId ? parseInt(form.categoryId) : undefined,
+      categoryId: parseInt(form.categoryId),
       images,
       inStock: form.inStock,
       isFeatured: form.isFeatured,

@@ -86,7 +86,23 @@ router.get("/products/stats/summary", requireAdmin, async (req, res) => {
     const [{ total }] = await db.select({ total: sql<number>`count(*)::int` }).from(productsTable);
     const [{ inStock }] = await db.select({ inStock: sql<number>`count(*)::int` }).from(productsTable).where(eq(productsTable.inStock, true));
     const [{ outOfStock }] = await db.select({ outOfStock: sql<number>`count(*)::int` }).from(productsTable).where(eq(productsTable.inStock, false));
-    res.json({ total, inStock, outOfStock });
+    const [{ featured }] = await db.select({ featured: sql<number>`count(*)::int` }).from(productsTable).where(eq(productsTable.isFeatured, true));
+
+    const byCategoryRaw = await db
+      .select({
+        categoryId: categoriesTable.id,
+        categoryName: categoriesTable.name,
+        count: sql<number>`count(${productsTable.id})::int`,
+      })
+      .from(productsTable)
+      .leftJoin(categoriesTable, eq(productsTable.categoryId, categoriesTable.id))
+      .groupBy(categoriesTable.id, categoriesTable.name);
+
+    const byCategory = byCategoryRaw
+      .filter(r => r.categoryId !== null)
+      .map(r => ({ categoryId: r.categoryId!, categoryName: r.categoryName ?? "", count: r.count }));
+
+    res.json({ total, inStock, outOfStock, featured, byCategory });
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Internal server error" });

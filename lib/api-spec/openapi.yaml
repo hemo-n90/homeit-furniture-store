@@ -985,6 +985,9 @@ components:
         whatsappNumber:
           type: string
           nullable: true
+        logoUrl:
+          type: string
+          nullable: true
       required:
         - id
         - heroTitle
@@ -1015,6 +1018,9 @@ components:
         whatsappNumber:
           type: string
           nullable: true
+        logoUrl:
+          type: string
+          nullable: true
 
     CreateContactMessageBody:
       type: object
@@ -1023,17 +1029,14 @@ components:
           type: string
         email:
           type: string
+          nullable: true
         phone:
           type: string
           nullable: true
-        subject:
-          type: string
         message:
           type: string
       required:
         - name
-        - email
-        - subject
         - message
 
     ContactMessage:

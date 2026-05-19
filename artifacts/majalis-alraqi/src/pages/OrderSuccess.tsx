@@ -7,7 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export default function OrderSuccess() {
   const { id } = useParams<{ id: string }>();
   const orderId = parseInt(id || "0");
-  const { data: order } = useGetOrder(orderId, { query: { enabled: !!orderId } });
+  const { data: order } = useGetOrder(orderId, { query: { enabled: !!orderId, queryKey: [`/api/orders/${orderId}`] } });
   const { t, dir } = useLanguage();
 
   return (

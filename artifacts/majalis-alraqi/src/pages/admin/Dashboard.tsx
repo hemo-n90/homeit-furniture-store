@@ -18,11 +18,13 @@ export default function AdminDashboard() {
   const { data: orderStats } = useGetOrderStats();
   const { data: orders } = useListOrders({ limit: 5 });
 
+  const newOrdersCount = orderStats?.byStatus?.find(s => s.status === "new")?.count ?? 0;
+
   const stats = [
     { label: "إجمالي المنتجات", value: productStats?.total ?? "—", icon: Package, color: "text-blue-600", bg: "bg-blue-50" },
-    { label: "إجمالي الطلبات", value: orderStats?.total ?? "—", icon: ShoppingCart, color: "text-green-600", bg: "bg-green-50" },
-    { label: "طلبات جديدة", value: orderStats?.newOrders ?? "—", icon: AlertCircle, color: "text-orange-600", bg: "bg-orange-50" },
-    { label: "إيرادات المبيعات", value: orderStats?.revenue ? `${parseFloat(String(orderStats.revenue)).toLocaleString()} ر.س` : "—", icon: DollarSign, color: "text-primary", bg: "bg-primary/10" },
+    { label: "إجمالي الطلبات", value: orderStats?.totalOrders ?? "—", icon: ShoppingCart, color: "text-green-600", bg: "bg-green-50" },
+    { label: "طلبات جديدة", value: newOrdersCount, icon: AlertCircle, color: "text-orange-600", bg: "bg-orange-50" },
+    { label: "إيرادات المبيعات", value: orderStats?.totalRevenue ? `${parseFloat(String(orderStats.totalRevenue)).toLocaleString()} ر.س` : "—", icon: DollarSign, color: "text-primary", bg: "bg-primary/10" },
   ];
 
   return (
@@ -71,7 +73,7 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {orders?.map((order) => {
+                {orders?.orders?.map((order) => {
                   const status = statusMap[order.status] || { label: order.status, color: "bg-muted text-muted-foreground" };
                   return (
                     <tr key={order.id} className="border-t border-border hover:bg-muted/30 transition-colors">
@@ -87,7 +89,7 @@ export default function AdminDashboard() {
                     </tr>
                   );
                 })}
-                {!orders?.length && (
+                {!orders?.orders?.length && (
                   <tr><td colSpan={5} className="px-5 py-10 text-center text-muted-foreground">لا توجد طلبات بعد</td></tr>
                 )}
               </tbody>
