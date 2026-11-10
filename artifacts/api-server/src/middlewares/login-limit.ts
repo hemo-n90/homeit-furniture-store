@@ -21,6 +21,6 @@ export function createLoginLimiter(now = Date.now) {
       res.setHeader("Retry-After", String(Math.ceil((entry.expires - time) / 1000)));
       return res.status(429).json({ error: "Too many login attempts" });
     }
-    next();
+    return next();
   };
 }
