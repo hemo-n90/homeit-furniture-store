@@ -15,6 +15,11 @@ if (!fs.existsSync(uploadsDir)) {
 
 const app: Express = express();
 
+app.use((_req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+});
+
 // Serve uploaded files as static
 app.use("/api/uploads", express.static(uploadsDir, { maxAge: "7d" }));
 
@@ -37,7 +42,11 @@ app.use(
     },
   }),
 );
-app.use(cors({ origin: true, credentials: true }));
+const allowedOrigins = new Set((process.env.CORS_ORIGINS || "").split(",").map(origin => origin.trim()).filter(Boolean));
+app.use(cors({
+  origin: (origin, callback) => callback(null, !origin || allowedOrigins.has(origin)),
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,3 +54,4 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", router);
 
 export default app;
+

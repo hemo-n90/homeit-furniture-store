@@ -5,13 +5,15 @@ import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { signToken, requireAuth } from "../middlewares/auth";
 
+import { createLoginLimiter } from "../middlewares/login-limit";
+
 const router = Router();
 
 // POST /api/auth/login
-router.post("/auth/login", async (req, res) => {
+router.post("/auth/login", createLoginLimiter(), async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
+    if (typeof email !== "string" || typeof password !== "string" || !email.trim() || email.length > 255 || !password || password.length > 1024) {
       res.status(400).json({ error: "Email and password are required" });
       return;
     }
@@ -48,3 +50,4 @@ router.get("/auth/me", requireAuth, (req, res) => {
 });
 
 export default router;
+

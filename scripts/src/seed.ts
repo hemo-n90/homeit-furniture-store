@@ -10,14 +10,22 @@ import {
 import bcrypt from "bcrypt";
 
 async function seed() {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Demo seed is disabled in production");
+  }
+  const adminEmail = process.env.SEED_ADMIN_EMAIL;
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+  if (!adminEmail || !adminEmail.includes("@") || !adminPassword || adminPassword.length < 12 || /^(replace_|your_|change.?me)/i.test(adminPassword)) {
+    throw new Error("Set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD (at least 12 characters)");
+  }
   console.log("Seeding database...");
 
   // Create admin user
-  const passwordHash = await bcrypt.hash("admin123456", 10);
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
   await db
     .insert(usersTable)
     .values({
-      email: "admin@homeitfurniture.com",
+      email: adminEmail,
       password: passwordHash,
       name: "مدير النظام",
       role: "admin",
@@ -297,3 +305,4 @@ seed().catch((err) => {
   console.error("Seed failed:", err);
   process.exit(1);
 });
+

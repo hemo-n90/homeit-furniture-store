@@ -4,14 +4,16 @@ import { ordersTable, orderItemsTable, productsTable } from "@workspace/db";
 import { eq, desc, and, inArray, count, sum } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 
+import { parseOrderItems, boundedText } from "../lib/order-input";
+
 const router = Router();
 
 // GET /api/orders
 router.get("/orders", requireAdmin, async (req, res) => {
   try {
     const { status, limit = 50, offset = 0 } = req.query;
-    const limitN = Math.min(parseInt(limit as string) || 50, 200);
-    const offsetN = parseInt(offset as string) || 0;
+    const limitN = Math.max(1, Math.min(parseInt(limit as string) || 50, 200));
+    const offsetN = Math.max(0, parseInt(offset as string) || 0);
 
     const conditions = [];
     if (status) conditions.push(eq(ordersTable.status, status as string));
@@ -35,19 +37,15 @@ router.get("/orders", requireAdmin, async (req, res) => {
 router.post("/orders", async (req, res) => {
   try {
     const { customerName, customerPhone, city, address, notes, paymentMethod, items } = req.body;
-    if (!customerName || !customerPhone || !city || !address || !items?.length) {
-      res.status(400).json({ error: "Missing required fields" });
+    const parsedItems = parseOrderItems(items);
+    if (!boundedText(customerName, 255) || !boundedText(customerPhone, 50) ||
+        !boundedText(city, 100) || !boundedText(address, 2000) || !parsedItems ||
+        (notes != null && (typeof notes !== "string" || notes.length > 2000)) ||
+        (paymentMethod != null && paymentMethod !== "cod")) {
+      res.status(400).json({ error: "Invalid order fields or items" });
       return;
     }
-
-    const productIds: number[] = items
-      .map((i: { productId: unknown }) => parseInt(String(i.productId)))
-      .filter((id: number) => !isNaN(id));
-
-    if (productIds.length !== items.length) {
-      res.status(400).json({ error: "Invalid product IDs" });
-      return;
-    }
+    const productIds = parsedItems.map(item => item.productId);
 
     const products = await db
       .select()
@@ -65,15 +63,19 @@ router.post("/orders", async (req, res) => {
       totalPrice: string;
     }[] = [];
 
-    for (const item of items) {
-      const pid = parseInt(String(item.productId));
+    for (const item of parsedItems) {
+      const pid = item.productId;
       const product = products.find((p) => p.id === pid);
-      if (!product) {
+      if (!product || !product.inStock) {
         res.status(400).json({ error: `Product ${item.productId} not found` });
         return;
       }
       const unitPrice = parseFloat(product.discountPrice || product.price);
-      const qty = Math.max(1, parseInt(String(item.quantity)) || 1);
+      const qty = item.quantity;
+      if (!Number.isFinite(unitPrice) || unitPrice < 0 || unitPrice * qty >= 100000000) {
+        res.status(400).json({ error: "Invalid product price or order total" });
+        return;
+      }
       const total = unitPrice * qty;
       totalAmount += total;
       orderItems.push({
@@ -87,26 +89,22 @@ router.post("/orders", async (req, res) => {
       });
     }
 
-    const [order] = await db
-      .insert(ordersTable)
-      .values({
-        customerName,
-        customerPhone,
-        city,
-        address,
-        notes: notes || null,
-        paymentMethod: paymentMethod || "cod",
-        status: "new",
-        totalAmount: totalAmount.toFixed(2),
-      })
-      .returning();
+    if (totalAmount >= 100000000) {
+      res.status(400).json({ error: "Order total exceeds supported range" });
+      return;
+    }
+    const result = await db.transaction(async (tx) => {
+      const [order] = await tx.insert(ordersTable).values({
+        customerName: customerName.trim(), customerPhone: customerPhone.trim(),
+        city: city.trim(), address: address.trim(), notes: notes || null,
+        paymentMethod: "cod", status: "new", totalAmount: totalAmount.toFixed(2),
+      }).returning();
+      const insertedItems = await tx.insert(orderItemsTable)
+        .values(orderItems.map(item => ({ ...item, orderId: order.id }))).returning();
+      return { ...order, items: insertedItems };
+    });
 
-    const insertedItems = await db
-      .insert(orderItemsTable)
-      .values(orderItems.map((item) => ({ ...item, orderId: order.id })))
-      .returning();
-
-    res.status(201).json({ ...order, items: insertedItems });
+    res.status(201).json(result);
   } catch (err) {
     req.log.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -211,3 +209,4 @@ router.patch("/orders/:id/status", requireAdmin, async (req, res) => {
 });
 
 export default router;
+

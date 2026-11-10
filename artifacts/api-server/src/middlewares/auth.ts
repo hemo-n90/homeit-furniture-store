@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.SESSION_SECRET || "majalis-alraqi-secret";
+const configuredSecret = process.env.SESSION_SECRET;
+if (!configuredSecret || configuredSecret.trim().length < 32 ||
+    /^(replace_|your_|change.?me)/i.test(configuredSecret.trim())) {
+  throw new Error("SESSION_SECRET must be a strong, non-placeholder secret of at least 32 characters");
+}
+const JWT_SECRET: string = configuredSecret;
 
 export interface AuthPayload {
   id: number;
@@ -48,3 +53,4 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction) {
     next();
   });
 }
+
