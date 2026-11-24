@@ -82,7 +82,7 @@ router.post("/wishlist", async (req, res) => {
 // DELETE /api/wishlist/:productId
 router.delete("/wishlist/:productId", async (req, res) => {
   try {
-    const productId = parseInt(req.params.productId);
+    const productId = parseInt(String(req.params.productId), 10);
     const sessionId = req.cookies?.["wishlist_session"] || "";
     if (!sessionId) {
       res.json({ message: "Deleted" });

@@ -112,7 +112,7 @@ router.get("/products/stats/summary", requireAdmin, async (req, res) => {
 // GET /api/products/:id
 router.get("/products/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(String(req.params.id), 10);
     const [product] = await db
       .select({
         id: productsTable.id,
@@ -152,7 +152,7 @@ router.get("/products/:id", async (req, res) => {
 // PATCH /api/products/:id
 router.patch("/products/:id", requireAdmin, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(String(req.params.id), 10);
     const updates: Record<string, any> = {};
     const fields = ["name", "nameAr", "description", "descriptionAr", "price", "discountPrice", "images", "categoryId", "inStock", "isFeatured", "isOnHomepage", "isBestseller", "badge"];
     for (const f of fields) {
@@ -176,7 +176,7 @@ router.patch("/products/:id", requireAdmin, async (req, res) => {
 // DELETE /api/products/:id
 router.delete("/products/:id", requireAdmin, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(String(req.params.id), 10);
     const [deleted] = await db.delete(productsTable).where(eq(productsTable.id, id)).returning();
     if (!deleted) {
       res.status(404).json({ error: "Product not found" });
