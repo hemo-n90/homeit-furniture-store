@@ -5,6 +5,7 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { AdminRoute } from "@/components/admin/AdminRoute";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Trash2, GripVertical, Upload, Image } from "lucide-react";
+import { HERO_IMAGES } from "@/lib/images";
 
 interface HeroSlide {
   image: string;
@@ -12,13 +13,7 @@ interface HeroSlide {
   descriptionAr?: string;
 }
 
-const DEFAULT_SLIDE_IMAGES = [
-  "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1920&q=90",
-  "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1920&q=90",
-  "https://images.unsplash.com/photo-1567016520496-0cb37d8467a7?w=1920&q=90",
-  "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=90",
-  "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&q=90",
-];
+const DEFAULT_SLIDE_IMAGES = HERO_IMAGES;
 
 export default function AdminHomepage() {
   const queryClient = useQueryClient();

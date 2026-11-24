@@ -5,6 +5,7 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { AdminRoute } from "@/components/admin/AdminRoute";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, X, Upload, Link as LinkIcon } from "lucide-react";
+import { PLACEHOLDER_IMAGE } from "@/lib/images";
 
 interface ProductForm {
   name: string; nameAr: string; description: string; descriptionAr: string;
@@ -179,10 +180,10 @@ export default function AdminProducts() {
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <img
-                          src={(p.images as string[])?.[0] || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=60&q=80"}
+                          src={(p.images as string[])?.[0] || PLACEHOLDER_IMAGE}
                           alt=""
                           className="w-12 h-12 rounded-xl object-cover shrink-0"
-                          onError={e => { (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=60&q=80"; }}
+                          onError={e => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER_IMAGE; }}
                         />
                         <div className="min-w-0">
                           <p className="font-bold text-foreground truncate max-w-[140px] sm:max-w-none">{p.nameAr}</p>
@@ -375,7 +376,7 @@ export default function AdminProducts() {
                             src={img}
                             alt=""
                             className="w-full h-full object-cover"
-                            onError={e => { (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&q=60"; }}
+                            onError={e => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER_IMAGE; }}
                           />
                           {i === 0 && (
                             <div className="absolute top-1 right-1 bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded">

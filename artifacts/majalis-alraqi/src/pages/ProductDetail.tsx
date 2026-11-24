@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ShoppingBag, Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PLACEHOLDER_IMAGE } from "@/lib/images";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -91,7 +92,7 @@ export default function ProductDetail() {
           <motion.div initial={{ opacity: 0, x: dir === "rtl" ? -20 : 20 }} animate={{ opacity: 1, x: 0 }}>
             <div className="relative rounded-2xl overflow-hidden aspect-square bg-muted mb-4">
               <img
-                src={images[activeImage] || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80"}
+                src={images[activeImage] || PLACEHOLDER_IMAGE}
                 alt={displayName}
                 className="w-full h-full object-cover"
               />

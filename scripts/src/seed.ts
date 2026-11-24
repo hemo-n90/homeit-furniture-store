@@ -42,28 +42,28 @@ async function seed() {
         nameAr: "مجالس",
         slug: "majalis",
         image:
-          "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+          "/images/category-majlis.png",
       },
       {
         name: "Sofas & Couches",
         nameAr: "كنبات وأرائك",
         slug: "sofas",
         image:
-          "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80",
+          "/images/category-sofa.png",
       },
       {
         name: "Curtains & Drapes",
         nameAr: "ستائر وأقمشة",
         slug: "curtains",
         image:
-          "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80",
+          "/images/category-curtains.png",
       },
       {
         name: "Home Decor",
         nameAr: "ديكور المنزل",
         slug: "decor",
         image:
-          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+          "/images/category-decor.png",
       },
     ])
     .onConflictDoNothing()
@@ -90,8 +90,8 @@ async function seed() {
         price: "8500.00",
         discountPrice: "7200.00",
         images: [
-          "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
-          "https://images.unsplash.com/photo-1567016432779-094069958ea5?w=800&q=80",
+          "/images/hero.png",
+          "/images/category-majlis.png",
         ],
         categoryId: majalisId,
         inStock: true,
@@ -107,7 +107,7 @@ async function seed() {
         descriptionAr: "مجلس ركني أنيق مع تفاصيل خشبية منحوتة يدوياً ووسائد من المخمل الفاخر.",
         price: "6200.00",
         images: [
-          "https://images.unsplash.com/photo-1567016520496-0cb37d8467a7?w=800&q=80",
+          "/images/category-sofa.png",
         ],
         categoryId: majalisId,
         inStock: true,
@@ -124,8 +124,8 @@ async function seed() {
         price: "4800.00",
         discountPrice: "3990.00",
         images: [
-          "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80",
-          "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+          "/images/category-curtains.png",
+          "/images/category-decor.png",
         ],
         categoryId: sofasId,
         inStock: true,
@@ -141,7 +141,7 @@ async function seed() {
         descriptionAr: "تصميم تشيسترفيلد الكلاسيكي بالمخمل الأزرق الملكي مع تفاصيل الأزرار.",
         price: "5500.00",
         images: [
-          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+          "/images/hero.png",
         ],
         categoryId: sofasId,
         inStock: true,
@@ -158,7 +158,7 @@ async function seed() {
         price: "1800.00",
         discountPrice: "1450.00",
         images: [
-          "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=800&q=80",
+          "/images/category-majlis.png",
         ],
         categoryId: curtainsId,
         inStock: true,
@@ -174,7 +174,7 @@ async function seed() {
         descriptionAr: "ستائر مخملية بلون البرغندي الغامق مع شراريب ذهبية، تباع زوجاً.",
         price: "2200.00",
         images: [
-          "https://images.unsplash.com/photo-1558882224-dda166733046?w=800&q=80",
+          "/images/category-sofa.png",
         ],
         categoryId: curtainsId,
         inStock: true,
@@ -190,7 +190,7 @@ async function seed() {
         descriptionAr: "طقم مزهريات سيراميك مرسومة يدوياً مستوحاة من الأنماط الهندسية العربية التقليدية.",
         price: "650.00",
         images: [
-          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+          "/images/category-curtains.png",
         ],
         categoryId: decorId,
         inStock: true,
@@ -207,7 +207,7 @@ async function seed() {
         price: "980.00",
         discountPrice: "799.00",
         images: [
-          "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
+          "/images/category-decor.png",
         ],
         categoryId: decorId,
         inStock: true,
@@ -231,7 +231,7 @@ async function seed() {
       heroDescription: "Crafting bespoke luxury furniture for discerning homes",
       heroDescriptionAr: "نصنع أثاثاً فاخراً راقياً للمنازل الراقية — حيث يلتقي الأصالة بالحداثة",
       heroImage:
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600&q=90",
+        "/images/hero.png",
       announcementBar: "Free delivery on orders above SAR 2000 | Call us: +966 50 000 0000",
       announcementBarAr: "توصيل مجاني للطلبات فوق 2000 ريال | اتصل بنا: 0500000000",
       whatsappNumber: "966500000000",
