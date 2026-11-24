@@ -5,6 +5,7 @@ import { HeroSlider } from "@/components/ui/HeroSlider";
 import { motion } from "framer-motion";
 import { Truck, Shield, Phone, Award } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HERO_IMAGES } from "@/lib/images";
 
 const benefitIcons = [Truck, Shield, Phone, Award];
 
@@ -12,7 +13,7 @@ export default function Home() {
   const { data: settings } = useGetHomepageSettings();
   const { data: bestSellers } = useListProducts({ isBestseller: true, limit: 4 });
   const { data: featured } = useListProducts({ featured: true, limit: 4 });
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
 
   let sliderSlides: { image: string; titleAr?: string; descriptionAr?: string }[] | undefined;
   if (settings?.heroImage) {
@@ -22,15 +23,19 @@ export default function Home() {
     } catch { /* use defaults */ }
   }
 
+  const announcement =
+    lang === "en" ? settings?.announcementBar || settings?.announcementBarAr : settings?.announcementBarAr;
+
   return (
     <div className="min-h-screen" dir={dir}>
-      {settings?.announcementBarAr && (
-        <div className="bg-secondary text-secondary-foreground text-sm py-2.5 text-center font-medium tracking-wide">
-          {settings.announcementBarAr}
+      {/* The hero sits directly under the transparent navbar; the announcement follows it. */}
+      <HeroSlider slides={sliderSlides} />
+
+      {announcement && (
+        <div className="bg-secondary text-secondary-foreground text-sm py-2.5 px-4 text-center font-medium tracking-wide">
+          {announcement}
         </div>
       )}
-
-      <HeroSlider slides={sliderSlides} />
 
       {/* Benefits Bar */}
       <section className="bg-card border-y border-border py-6">
@@ -88,7 +93,7 @@ export default function Home() {
 
       {/* Banner */}
       <section className="relative py-20 sm:py-28 overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1600&q=80" alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={HERO_IMAGES[3]} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-secondary/85" />
         <div className="relative z-10 container mx-auto px-4 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
