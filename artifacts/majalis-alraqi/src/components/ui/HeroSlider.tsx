@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HERO_IMAGES } from "@/lib/images";
 
 interface Slide {
   image: string;
@@ -14,13 +15,7 @@ interface HeroSliderProps {
   slides?: Slide[];
 }
 
-const SLIDE_IMAGES = [
-  "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1920&q=90",
-  "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1920&q=90",
-  "https://images.unsplash.com/photo-1567016520496-0cb37d8467a7?w=1920&q=90",
-  "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=90",
-  "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&q=90",
-];
+const SLIDE_IMAGES = HERO_IMAGES;
 
 const slideVariants = {
   enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 80 : -80 }),
@@ -128,14 +123,14 @@ export function HeroSlider({ slides }: HeroSliderProps) {
       {/* Arrow Navigation — flipped for RTL */}
       <button
         onClick={dir === "rtl" ? prev : next}
-        className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 text-white p-3 sm:p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110"
+        className="hidden sm:block absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 text-white p-3 sm:p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110"
         aria-label="Previous"
       >
         <ChevronRight size={22} />
       </button>
       <button
         onClick={dir === "rtl" ? next : prev}
-        className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 text-white p-3 sm:p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110"
+        className="hidden sm:block absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 text-white p-3 sm:p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110"
         aria-label="Next"
       >
         <ChevronLeft size={22} />
@@ -165,7 +160,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
       )}
 
       {/* Slide counter */}
-      <div className={`absolute top-6 ${dir === "rtl" ? "left-6" : "right-6"} z-20 bg-black/30 backdrop-blur-sm text-white text-sm font-bold px-3 py-1 rounded-full`}>
+      <div dir="ltr" className={`absolute top-24 sm:top-28 ${dir === "rtl" ? "left-6" : "right-6"} z-20 bg-black/30 backdrop-blur-sm text-white text-sm font-bold px-3 py-1 rounded-full`}>
         {current + 1} / {allSlides.length}
       </div>
     </section>

@@ -1,12 +1,9 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ABOUT_IMAGE, HERO_IMAGES } from "@/lib/images";
 
-const SECTION_IMAGES = [
-  "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
-  "https://images.unsplash.com/photo-1567016520496-0cb37d8467a7?w=800&q=80",
-  "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80",
-];
+const SECTION_IMAGES = HERO_IMAGES;
 
 export default function About() {
   const { t, dir } = useLanguage();
@@ -15,7 +12,7 @@ export default function About() {
     <div className="min-h-screen pt-24 pb-16 bg-background" dir={dir}>
       {/* Hero */}
       <section className="relative h-72 flex items-center justify-center overflow-hidden mb-20">
-        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1600&q=80" alt="About" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={ABOUT_IMAGE} alt="About" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/60" />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative z-10 text-center text-white px-4">
           <h1 className="text-4xl sm:text-5xl font-black mb-4">{t.about.title}</h1>

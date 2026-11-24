@@ -6,6 +6,7 @@ import { ShoppingBag, Heart } from "lucide-react";
 import { useAddToWishlist } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PLACEHOLDER_IMAGE } from "@/lib/images";
 
 interface ProductCardProps {
   product: Product;
@@ -20,7 +21,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const price = parseFloat(String(product.price));
   const discountPrice = product.discountPrice ? parseFloat(String(product.discountPrice)) : null;
   const images = (product.images as string[]) || [];
-  const mainImage = images[0] || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80";
+  const mainImage = images[0] || PLACEHOLDER_IMAGE;
   const displayName = lang === "en" && product.name ? product.name : product.nameAr;
   const displayCategory = lang === "en" && (product as any).categoryName
     ? (product as any).categoryName
@@ -90,7 +91,7 @@ export function ProductCard({ product }: ProductCardProps) {
             alt={displayName}
             className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
             onError={e => {
-              (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80";
+              (e.currentTarget as HTMLImageElement).src = PLACEHOLDER_IMAGE;
             }}
           />
           <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">

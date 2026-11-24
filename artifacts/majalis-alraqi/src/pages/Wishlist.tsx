@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ShoppingBag, Trash2 } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PLACEHOLDER_IMAGE } from "@/lib/images";
 
 export default function Wishlist() {
   const { data: wishlist, isLoading } = useGetWishlist();
@@ -69,7 +70,7 @@ export default function Wishlist() {
                     className="bg-card border border-border rounded-2xl overflow-hidden">
                     <Link href={`/products/${item.productId}`}>
                       <div className="relative aspect-square bg-muted overflow-hidden">
-                        <img src={images[0] || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80"} alt={item.nameAr}
+                        <img src={images[0] || PLACEHOLDER_IMAGE} alt={item.nameAr}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
                       </div>
                     </Link>

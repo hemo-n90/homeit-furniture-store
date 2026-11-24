@@ -216,8 +216,8 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Spacer */}
-      <div className="h-18 sm:h-20" />
+      {/* Spacer for the fixed header; the home hero sits underneath it instead. */}
+      {!isHome && <div className="h-18 sm:h-20" />}
     </>
   );
 }

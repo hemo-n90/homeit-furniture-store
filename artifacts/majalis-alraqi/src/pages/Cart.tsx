@@ -3,6 +3,7 @@ import { useCart } from "@/contexts/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, ShoppingBag, Plus, Minus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PLACEHOLDER_IMAGE } from "@/lib/images";
 
 export default function Cart() {
   const { items, removeItem, updateQuantity, totalAmount, clearCart } = useCart();
@@ -46,10 +47,10 @@ export default function Cart() {
                   <motion.div key={product.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -20 }}
                     className="bg-card border border-border rounded-2xl p-4 flex gap-4 items-center">
                     <img
-                      src={images[0] || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&q=80"}
+                      src={images[0] || PLACEHOLDER_IMAGE}
                       alt={product.nameAr}
                       className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl shrink-0 bg-muted"
-                      onError={e => { (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&q=80"; }}
+                      onError={e => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER_IMAGE; }}
                     />
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-foreground truncate">{product.nameAr}</h3>

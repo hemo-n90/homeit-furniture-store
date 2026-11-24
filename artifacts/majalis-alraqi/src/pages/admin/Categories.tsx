@@ -5,6 +5,7 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { AdminRoute } from "@/components/admin/AdminRoute";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
+import { PLACEHOLDER_IMAGE } from "@/lib/images";
 
 interface CategoryForm { name: string; nameAr: string; slug: string; image: string; }
 const emptyForm: CategoryForm = { name: "", nameAr: "", slug: "", image: "" };
@@ -55,7 +56,7 @@ export default function AdminCategories() {
             categories?.map(c => (
               <div key={c.id} className="bg-card border border-border rounded-2xl overflow-hidden flex items-center gap-4 p-4">
                 <img
-                  src={c.image || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&q=80"}
+                  src={c.image || PLACEHOLDER_IMAGE}
                   alt={c.nameAr}
                   className="w-16 h-16 rounded-xl object-cover shrink-0"
                 />

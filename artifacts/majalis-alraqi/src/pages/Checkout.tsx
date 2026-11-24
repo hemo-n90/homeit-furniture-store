@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PLACEHOLDER_IMAGE } from "@/lib/images";
 
 export default function Checkout() {
   const [, setLocation] = useLocation();
@@ -139,7 +140,7 @@ export default function Checkout() {
                     const images = (product.images as string[]) || [];
                     return (
                       <div key={product.id} className="flex items-center gap-3">
-                        <img src={images[0] || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=80&q=80"} alt={product.nameAr}
+                        <img src={images[0] || PLACEHOLDER_IMAGE} alt={product.nameAr}
                           className="w-12 h-12 rounded-lg object-cover shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold text-foreground truncate">{product.nameAr}</p>
