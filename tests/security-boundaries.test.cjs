@@ -72,3 +72,14 @@ for (const failItems of [false, true]) test(`order writes share a transaction (i
   assert.equal(res.code,failItems?500:201);
   assert.equal(committed.length,failItems?0:2);
 });
+
+test('order money helpers use exact hundredths', () => {
+  const { toHundredths, formatHundredths } = load('lib/order-input.ts');
+  assert.equal(toHundredths('7200.5'), 720050);
+  assert.equal(toHundredths('0.10'), 10);
+  assert.equal(toHundredths('-1'), null);
+  assert.equal(toHundredths('1.234'), null);
+  // 0.1 + 0.2 style drift cannot occur on integer hundredths
+  assert.equal(formatHundredths(toHundredths('0.10') + toHundredths('0.20')), '0.30');
+  assert.equal(formatHundredths(toHundredths('19.99') * 3), '59.97');
+});

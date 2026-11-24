@@ -4,7 +4,7 @@ import { ordersTable, orderItemsTable, productsTable } from "@workspace/db";
 import { eq, desc, and, inArray, count, sum } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth";
 
-import { parseOrderItems, boundedText } from "../lib/order-input";
+import { parseOrderItems, boundedText, toHundredths, formatHundredths } from "../lib/order-input";
 
 const router = Router();
 
@@ -70,26 +70,27 @@ router.post("/orders", async (req, res) => {
         res.status(400).json({ error: `Product ${item.productId} not found` });
         return;
       }
-      const unitPrice = parseFloat(product.discountPrice || product.price);
+      // Integer hundredths avoid floating-point drift in money totals.
+      const unitHundredths = toHundredths(String(product.discountPrice || product.price));
       const qty = item.quantity;
-      if (!Number.isFinite(unitPrice) || unitPrice < 0 || unitPrice * qty >= 100000000) {
+      if (unitHundredths === null || unitHundredths * qty >= 10000000000) {
         res.status(400).json({ error: "Invalid product price or order total" });
         return;
       }
-      const total = unitPrice * qty;
-      totalAmount += total;
+      const lineHundredths = unitHundredths * qty;
+      totalAmount += lineHundredths;
       orderItems.push({
         productId: product.id,
         productName: product.name,
         productNameAr: product.nameAr,
         productImage: (product.images as string[])?.[0] ?? null,
         quantity: qty,
-        unitPrice: unitPrice.toFixed(2),
-        totalPrice: total.toFixed(2),
+        unitPrice: formatHundredths(unitHundredths),
+        totalPrice: formatHundredths(lineHundredths),
       });
     }
 
-    if (totalAmount >= 100000000) {
+    if (totalAmount >= 10000000000) {
       res.status(400).json({ error: "Order total exceeds supported range" });
       return;
     }
@@ -97,7 +98,7 @@ router.post("/orders", async (req, res) => {
       const [order] = await tx.insert(ordersTable).values({
         customerName: customerName.trim(), customerPhone: customerPhone.trim(),
         city: city.trim(), address: address.trim(), notes: notes || null,
-        paymentMethod: "cod", status: "new", totalAmount: totalAmount.toFixed(2),
+        paymentMethod: "cod", status: "new", totalAmount: formatHundredths(totalAmount),
       }).returning();
       const insertedItems = await tx.insert(orderItemsTable)
         .values(orderItems.map(item => ({ ...item, orderId: order.id }))).returning();
@@ -153,7 +154,7 @@ router.get("/orders/stats/summary", requireAdmin, async (req, res) => {
 // GET /api/orders/:id
 router.get("/orders/:id", requireAdmin, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(String(req.params.id), 10);
     if (isNaN(id)) {
       res.status(400).json({ error: "Invalid order ID" });
       return;
@@ -181,7 +182,7 @@ router.get("/orders/:id", requireAdmin, async (req, res) => {
 // PATCH /api/orders/:id/status
 router.patch("/orders/:id/status", requireAdmin, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(String(req.params.id), 10);
     if (isNaN(id)) {
       res.status(400).json({ error: "Invalid order ID" });
       return;
