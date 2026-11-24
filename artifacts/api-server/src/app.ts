@@ -15,6 +15,13 @@ if (!fs.existsSync(uploadsDir)) {
 
 const app: Express = express();
 
+// Behind a reverse proxy (for example a hosting platform), set TRUST_PROXY to the
+// number of proxy hops so per-client limits use the real client address.
+const trustProxyHops = Number(process.env.TRUST_PROXY || 0);
+if (Number.isInteger(trustProxyHops) && trustProxyHops > 0) {
+  app.set("trust proxy", trustProxyHops);
+}
+
 app.use((_req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   next();
