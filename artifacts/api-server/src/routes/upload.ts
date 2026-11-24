@@ -1,51 +1,38 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
+import { randomUUID } from "node:crypto";
 import { requireAdmin } from "../middlewares/auth";
+import { imageExtension } from "../lib/upload-type";
 
 const router = Router();
-
 const uploadDir = path.join(process.cwd(), "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024, files: 10 } });
 
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadDir),
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const name = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
-    cb(null, name);
-  },
-});
-
-const fileFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
-  if (allowed.includes(file.mimetype)) cb(null, true);
-  else cb(new Error("نوع الملف غير مدعوم. يرجى رفع صورة (JPEG, PNG, WebP)"));
-};
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 },
-});
-
-// POST /api/upload — upload one or more images
-router.post("/upload", requireAdmin, upload.array("images", 10), (req, res) => {
+router.post("/upload", requireAdmin, upload.array("images", 10), async (req, res) => {
+  const written: string[] = [];
   try {
     const files = req.files as Express.Multer.File[];
-    if (!files || files.length === 0) {
-      res.status(400).json({ error: "لم يتم رفع أي ملف" });
-      return;
+    if (!files?.length) return res.status(400).json({ error: "لم يتم رفع أي ملف" });
+    const extensions = files.map(file => imageExtension(file.buffer));
+    if (extensions.some(ext => ext === null)) {
+      return res.status(400).json({ error: "Unsupported image content" });
     }
-    const host = `${req.protocol}://${req.get("host")}`;
-    const urls = files.map(f => `${host}/api/uploads/${f.filename}`);
-    res.json({ urls });
+    await fs.mkdir(uploadDir, { recursive: true });
+    const urls: string[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const filename = `${randomUUID()}.${extensions[i]}`;
+      const target = path.join(uploadDir, filename);
+      await fs.writeFile(target, files[i].buffer, { flag: "wx" });
+      written.push(target);
+      urls.push(`/api/uploads/${filename}`);
+    }
+    return res.json({ urls });
   } catch (err) {
+    await Promise.allSettled(written.map(file => fs.unlink(file)));
     req.log.error(err);
-    res.status(500).json({ error: "فشل رفع الملف" });
+    return res.status(500).json({ error: "فشل رفع الملف" });
   }
 });
 

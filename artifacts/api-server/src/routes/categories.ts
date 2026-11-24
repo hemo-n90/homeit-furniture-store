@@ -48,7 +48,7 @@ router.post("/categories", requireAdmin, async (req, res) => {
 // GET /api/categories/:id
 router.get("/categories/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(String(req.params.id), 10);
     const [category] = await db.select().from(categoriesTable).where(eq(categoriesTable.id, id)).limit(1);
     if (!category) {
       res.status(404).json({ error: "Category not found" });
@@ -64,7 +64,7 @@ router.get("/categories/:id", async (req, res) => {
 // PATCH /api/categories/:id
 router.patch("/categories/:id", requireAdmin, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(String(req.params.id), 10);
     const { name, nameAr, slug, image } = req.body;
     const updates: Record<string, any> = {};
     if (name !== undefined) updates.name = name;
@@ -91,7 +91,7 @@ router.patch("/categories/:id", requireAdmin, async (req, res) => {
 // DELETE /api/categories/:id
 router.delete("/categories/:id", requireAdmin, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(String(req.params.id), 10);
     const [deleted] = await db
       .delete(categoriesTable)
       .where(eq(categoriesTable.id, id))

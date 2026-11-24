@@ -15,6 +15,18 @@ if (!fs.existsSync(uploadsDir)) {
 
 const app: Express = express();
 
+// Behind a reverse proxy (for example a hosting platform), set TRUST_PROXY to the
+// number of proxy hops so per-client limits use the real client address.
+const trustProxyHops = Number(process.env.TRUST_PROXY || 0);
+if (Number.isInteger(trustProxyHops) && trustProxyHops > 0) {
+  app.set("trust proxy", trustProxyHops);
+}
+
+app.use((_req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+});
+
 // Serve uploaded files as static
 app.use("/api/uploads", express.static(uploadsDir, { maxAge: "7d" }));
 
@@ -37,7 +49,11 @@ app.use(
     },
   }),
 );
-app.use(cors({ origin: true, credentials: true }));
+const allowedOrigins = new Set((process.env.CORS_ORIGINS || "").split(",").map(origin => origin.trim()).filter(Boolean));
+app.use(cors({
+  origin: (origin, callback) => callback(null, !origin || allowedOrigins.has(origin)),
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,3 +61,4 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", router);
 
 export default app;
+
