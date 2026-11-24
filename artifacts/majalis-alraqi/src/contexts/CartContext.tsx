@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@workspace/api-client-react';
 
+/** Matches the per-line quantity limit enforced by the order API. */
+export const MAX_ITEM_QUANTITY = 100;
+
 export interface CartItem {
   product: Product;
   quantity: number;
@@ -37,12 +40,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addItem = (product: Product, quantity: number) => {
+    quantity = Math.min(MAX_ITEM_QUANTITY, Math.max(1, Math.floor(quantity)));
     setItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
         return prev.map((item) =>
           item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: Math.min(MAX_ITEM_QUANTITY, item.quantity + quantity) }
             : item
         );
       }
@@ -61,7 +65,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
     setItems((prev) =>
       prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
+        item.product.id === productId
+          ? { ...item, quantity: Math.min(MAX_ITEM_QUANTITY, Math.floor(quantity)) }
+          : item
       )
     );
   };

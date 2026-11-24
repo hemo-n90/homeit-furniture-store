@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, Link } from "wouter";
 import { useGetProduct, useListProducts, useAddToWishlist } from "@workspace/api-client-react";
-import { useCart } from "@/contexts/CartContext";
+import { useCart, MAX_ITEM_QUANTITY } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { ShoppingBag, Heart, ChevronLeft, ChevronRight } from "lucide-react";
@@ -162,7 +162,7 @@ export default function ProductDetail() {
               <div className="flex items-center border border-border rounded-lg overflow-hidden">
                 <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="px-4 py-2 bg-muted hover:bg-muted/80 transition-colors font-bold text-lg">-</button>
                 <span className="px-6 py-2 font-bold text-lg">{quantity}</span>
-                <button onClick={() => setQuantity(q => q + 1)} className="px-4 py-2 bg-muted hover:bg-muted/80 transition-colors font-bold text-lg">+</button>
+                <button onClick={() => setQuantity(q => Math.min(MAX_ITEM_QUANTITY, q + 1))} className="px-4 py-2 bg-muted hover:bg-muted/80 transition-colors font-bold text-lg">+</button>
               </div>
             </div>
 
